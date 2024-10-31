@@ -1,7 +1,6 @@
 .vscode
 docs
 node_modules
-jsdoc.conf.json
 cert.pem
 key.pem
 dist
