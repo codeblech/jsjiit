@@ -100,7 +100,8 @@ export class WebPortal {
       exception = options.exception;
       delete options.exception;
     }
-
+    
+    console.log(options)
     let header;
     if (options.authenticated) {
       header = await this.session.get_headers(); // Assumes calling method is authenticated
@@ -261,13 +262,15 @@ export class WebPortal {
   async get_attendance(header, semester) {
     const ENDPOINT = "/StudentClassAttendance/getstudentattendancedetail";
 
-    const payload = {
+    const payload = await serialize_payload({
       clientid: this.session.clientid,
       instituteid: this.session.instituteid,
       registrationcode: semester.registration_code,
       registrationid: semester.registration_id,
       stynumber: header.stynumber,
-    };
+    });
+
+    // console.log(payload)
 
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"];
@@ -283,7 +286,7 @@ export class WebPortal {
    */
   async get_subject_daily_attendance(semester, subjectid, individualsubjectcode, subjectcomponentids) {
     const ENDPOINT = "/StudentClassAttendance/getstudentsubjectpersentage";
-    const payload = {
+    const payload = await serialize_payload({
       cmpidkey: subjectcomponentids.map((id) => ({ subjectcomponentid: id })),
       clientid: this.session.clientid,
       instituteid: this.session.instituteid,
@@ -291,7 +294,7 @@ export class WebPortal {
       registrationid: semester.registration_id,
       subjectcode: individualsubjectcode,
       subjectid: subjectid,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"];
   }
@@ -303,10 +306,10 @@ export class WebPortal {
   async get_registered_semesters() {
     const ENDPOINT = "/reqsubfaculty/getregistrationList";
 
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"]["registrations"].map((i) => Semester.from_json(i));
   }
@@ -318,11 +321,11 @@ export class WebPortal {
    */
   async get_registered_subjects_and_faculties(semester) {
     const ENDPOINT = "/reqsubfaculty/getfaculties";
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
       registrationid: semester.registration_id,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return new Registrations(resp["response"]);
   }
@@ -333,11 +336,12 @@ export class WebPortal {
    */
   async get_semesters_for_exam_events() {
     const ENDPOINT = "/studentcommonsontroller/getsemestercode-withstudentexamevents";
-    const payload = {
+    const payload = await serialize_payload({
       clientid: this.session.clientid,
       instituteid: this.session.instituteid,
       memberid: this.session.memberid,
-    };
+    });
+
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"]["semesterCodeinfo"]["semestercode"].map((i) => Semester.from_json(i));
   }
@@ -349,10 +353,10 @@ export class WebPortal {
    */
   async get_exam_events(semester) {
     const ENDPOINT = "/studentcommonsontroller/getstudentexamevents";
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
       registationid: semester.registration_id, // not a typo
-    };
+    });
 
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"]["eventcode"]["examevent"].map((i) => ExamEvent.from_json(i));
@@ -380,10 +384,10 @@ export class WebPortal {
    */
   async get_semesters_for_marks() {
     const ENDPOINT = "/studentcommonsontroller/getsemestercode-exammarks";
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"]["semestercode"].map((i) => Semester.from_json(i));
   }
@@ -432,9 +436,9 @@ export class WebPortal {
    */
   async get_semesters_for_grade_card() {
     const ENDPOINT = "/studentgradecard/getregistrationList";
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"]["registrations"].map((i) => Semester.from_json(i));
   }
@@ -461,12 +465,12 @@ export class WebPortal {
   async get_grade_card(semester) {
     const programid = await this.__get_program_id();
     const ENDPOINT = "/studentgradecard/showstudentgradecard";
-    const payload = {
+    const payload = await serialize_payload({
       branchid: this.session.branch_id,
       instituteid: this.session.instituteid,
       programid: programid,
       registrationid: semester.registration_id,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"];
   }
@@ -478,12 +482,12 @@ export class WebPortal {
    */
   async __get_semester_number() {
     const ENDPOINT = "/studentsgpacgpa/checkIfstudentmasterexist";
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
       name: this.session.name,
       enrollmentno: this.session.enrollmentno,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"]["studentlov"]["currentsemester"];
   }
@@ -495,11 +499,11 @@ export class WebPortal {
   async get_sgpa_cgpa() {
     const ENDPOINT = "/studentsgpacgpa/getallsemesterdata";
     const stynumber = await this.__get_semester_number();
-    const payload = {
+    const payload = await serialize_payload({
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
       stynumber: stynumber,
-    };
+    });
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"];
   }
