@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: encryption.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: encryption.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { generate_date_seq, get_random_char_seq } from "./utils.js";
+
+/**
+ * @module Encryption
+ */
+/**
+ * Encodes binary data to base64 string
+ * @param {Uint8Array} data - Binary data to encode
+ * @returns {string} Base64 encoded string
+ */
+export function base64Encode(data) {
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(data)));
+}
+
+/**
+ * Decodes base64 string to binary data
+ * @param {string} data - Base64 string to decode
+ * @returns {Uint8Array} Decoded binary data
+ */
+export function base64Decode(data) {
+  return Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
+}
+
+// Initialization Vector (IV)
+const IV = new TextEncoder().encode("dcek9wb8frty1pnm");
+
+/**
+ * Generates an AES key based on date sequence
+ * @param {Date} [date=null] - Optional date to use for key generation
+ * @returns {Promise&lt;CryptoKey>} Generated AES-CBC key
+ */
+export async function generate_key(date = null) {
+  const dateSeq = generate_date_seq(date);
+  const keyData = new TextEncoder().encode("qa8y" + dateSeq + "ty1pn");
+  return window.crypto.subtle.importKey("raw", keyData, { name: "AES-CBC" }, false, ["encrypt", "decrypt"]);
+}
+
+/**
+ * Generates an encrypted local name for request headers
+ * @param {Date} [date=null] - Optional date to use for name generation
+ * @returns {Promise&lt;string>} Base64 encoded encrypted local name
+ */
+export async function generate_local_name(date = null) {
+  const randomCharSeq = get_random_char_seq(4);
+  const dateSeq = generate_date_seq(date);
+  const randomSuffix = get_random_char_seq(5);
+  const nameBytes = new TextEncoder().encode(randomCharSeq + dateSeq + randomSuffix);
+  const encryptedBytes = await encrypt(nameBytes);
+
+  return base64Encode(encryptedBytes);
+}
+
+/**
+ * Encrypts data using AES-CBC
+ * @param {Uint8Array} data - Data to encrypt
+ * @returns {Promise&lt;Uint8Array>} Encrypted data
+ */
+export async function encrypt(data) {
+  const key = await generate_key();
+  const encrypted = await window.crypto.subtle.encrypt({ name: "AES-CBC", iv: IV }, key, data);
+  return new Uint8Array(encrypted);
+}
+
+/**
+ * Decrypts data using AES-CBC
+ * @param {Uint8Array} data - Data to decrypt
+ * @returns {Promise&lt;Uint8Array>} Decrypted data
+ */
+export async function decrypt(data) {
+  const key = await generate_key();
+  const decrypted = await window.crypto.subtle.decrypt({ name: "AES-CBC", iv: IV }, key, data);
+  return new Uint8Array(decrypted);
+}
+
+/**
+ * Deserializes an encrypted base64 payload
+ * @param {string} payload - Base64 encoded encrypted payload
+ * @returns {Promise&lt;object>} Decrypted and parsed JSON object
+ */
+export async function deserialize_payload(payload) {
+  const pbytes = base64Decode(payload);
+  const raw = await decrypt(pbytes);
+  return JSON.parse(new TextDecoder().decode(raw));
+}
+
+/**
+ * Serializes and encrypts a payload object
+ * @param {object} payload - Object to serialize and encrypt
+ * @returns {Promise&lt;string>} Base64 encoded encrypted payload
+ */
+export async function serialize_payload(payload) {
+  const raw = new TextEncoder().encode(JSON.stringify(payload));
+  const pbytes = await encrypt(raw);
+  return base64Encode(pbytes);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Attendance.html">Attendance</a></li><li><a href="module-Encryption.html">Encryption</a></li><li><a href="module-Exams.html">Exams</a></li><li><a href="module-Exceptions.html">Exceptions</a></li><li><a href="module-JSJIIT.html">JSJIIT</a></li><li><a href="module-Registration.html">Registration</a></li><li><a href="module-Utils.html">Utils</a></li><li><a href="module-Wrapper.html">Wrapper</a></li></ul><h3>Classes</h3><ul><li><a href="module-Attendance.AttendanceHeader.html">AttendanceHeader</a></li><li><a href="module-Attendance.AttendanceMeta.html">AttendanceMeta</a></li><li><a href="module-Attendance.Semester.html">Semester</a></li><li><a href="module-Exams.ExamEvent.html">ExamEvent</a></li><li><a href="module-Exceptions-AccountAPIError.html">AccountAPIError</a></li><li><a href="module-Exceptions-APIError.html">APIError</a></li><li><a href="module-Exceptions-LoginError.html">LoginError</a></li><li><a href="module-Exceptions-NotLoggedIn.html">NotLoggedIn</a></li><li><a href="module-Exceptions-SessionError.html">SessionError</a></li><li><a href="module-Exceptions-SessionExpired.html">SessionExpired</a></li><li><a href="module-Registration.RegisteredSubject.html">RegisteredSubject</a></li><li><a href="module-Registration.Registrations.html">Registrations</a></li><li><a href="module-Wrapper.WebPortal.html">WebPortal</a></li><li><a href="module-Wrapper.WebPortalSession.html">WebPortalSession</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 10 2025 06:41:49 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
