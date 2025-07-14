@@ -507,6 +507,22 @@ export class WebPortal {
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"];
   }
+  async get_hostel_details() {
+    const ENDPOINT = "/myhostelallocationdetail/gethostelallocationdetail";
+    const payload = {
+      clientid: this.session.clientid,
+      instituteid: this.session.instituteid,
+      studentid: this.session.memberid,
+    };
+
+    const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
+
+    if (!resp?.response) {
+      throw new Error("Hostel details not found");
+    }
+
+    return resp.response;
+  }
 
   async fill_feedback_form(feedback_option) {
     const SEMESTER_ENDPOINT = "/feedbackformcontroller/getFeedbackEvent";
@@ -642,6 +658,7 @@ const authenticatedMethods = [
   "get_grade_card",
   "__get_semester_number",
   "get_sgpa_cgpa",
+  "get_hostel_details", // NEWLY ADDED
 ];
 
 authenticatedMethods.forEach((methodName) => {
