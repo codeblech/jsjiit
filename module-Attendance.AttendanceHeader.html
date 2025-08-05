@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ExamEvent</title>
+    <title>JSDoc: Class: AttendanceHeader</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: ExamEvent</h1>
+    <h1 class="page-title">Class: AttendanceHeader</h1>
 
     
 
@@ -29,7 +29,7 @@
 <header>
     
         <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="module-Exams.html">Exams</a>.</span>ExamEvent<span class="signature">(exam_event_code, event_from, exam_event_desc, registration_id, exam_event_id)</span><span class="type-signature"></span></h2>
+            <span class="ancestors"><a href="module-Attendance.html">Attendance</a>.</span>AttendanceHeader<span class="signature">(branchdesc, name, programdesc, stynumber)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -42,7 +42,7 @@
     
 
     
-    <h4 class="name" id="ExamEvent"><span class="type-signature"></span>new ExamEvent<span class="signature">(exam_event_code, event_from, exam_event_desc, registration_id, exam_event_id)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AttendanceHeader"><span class="type-signature"></span>new AttendanceHeader<span class="signature">(branchdesc, name, programdesc, stynumber)</span><span class="type-signature"></span></h4>
     
 
     
@@ -50,7 +50,7 @@
 
 
 <div class="description">
-    Class containing exam event info
+    Class which contains header info in the Attendance API
 </div>
 
 
@@ -86,7 +86,7 @@
 
         <tr>
             
-                <td class="name"><code>exam_event_code</code></td>
+                <td class="name"><code>branchdesc</code></td>
             
 
             <td class="type">
@@ -102,37 +102,14 @@
 
             
 
-            <td class="description last">Code of the exam event</td>
+            <td class="description last">Description of the branch</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>event_from</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Event from timestamp</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>exam_event_desc</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -148,14 +125,14 @@
 
             
 
-            <td class="description last">Description of the exam event</td>
+            <td class="description last">Name of the student or entity</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>registration_id</code></td>
+                <td class="name"><code>programdesc</code></td>
             
 
             <td class="type">
@@ -171,14 +148,14 @@
 
             
 
-            <td class="description last">Registration ID</td>
+            <td class="description last">Description of the program</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>exam_event_id</code></td>
+                <td class="name"><code>stynumber</code></td>
             
 
             <td class="type">
@@ -194,7 +171,7 @@
 
             
 
-            <td class="description last">Exam event ID</td>
+            <td class="description last">Style number or identifier</td>
         </tr>
 
     
@@ -235,7 +212,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="exam.js.html">exam.js</a>, <a href="exam.js.html#line13">line 13</a>
+        <a href="attendance.js.html">attendance.js</a>, <a href="attendance.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -291,7 +268,7 @@
     
 
     
-    <h4 class="name" id=".from_json"><span class="type-signature">(static) </span>from_json<span class="signature">(resp)</span><span class="type-signature"> &rarr; {ExamEvent}</span></h4>
+    <h4 class="name" id=".from_json"><span class="type-signature">(static) </span>from_json<span class="signature">(resp)</span><span class="type-signature"> &rarr; {AttendanceHeader}</span></h4>
     
 
     
@@ -299,7 +276,7 @@
 
 
 <div class="description">
-    Static method to create an ExamEvent from a JSON object
+    Static method to create an AttendanceHeader from a JSON object
 </div>
 
 
@@ -351,7 +328,7 @@
 
             
 
-            <td class="description last">JSON object representing ExamEvent</td>
+            <td class="description last">JSON object representing AttendanceHeader</td>
         </tr>
 
     
@@ -392,7 +369,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="exam.js.html">exam.js</a>, <a href="exam.js.html#line26">line 26</a>
+        <a href="attendance.js.html">attendance.js</a>, <a href="attendance.js.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -421,7 +398,7 @@
 
         
 <div class="param-desc">
-    A new ExamEvent instance
+    A new AttendanceHeader instance
 </div>
 
 
@@ -432,7 +409,7 @@
     </dt>
     <dd>
         
-<span class="param-type">ExamEvent</span>
+<span class="param-type">AttendanceHeader</span>
 
 
     </dd>
@@ -466,7 +443,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Aug 05 2025 11:28:27 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Aug 05 2025 11:36:20 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

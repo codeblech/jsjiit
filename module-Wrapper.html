@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Semester</title>
+    <title>JSDoc: Module: Wrapper</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Semester</h1>
+    <h1 class="page-title">Module: Wrapper</h1>
 
     
 
@@ -28,8 +28,6 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>
-            <span class="ancestors"><a href="module-Attendance.html">Attendance</a>.</span>Semester<span class="signature">(registration_code, registration_id)</span><span class="type-signature"></span></h2>
         
     
 </header>
@@ -39,99 +37,57 @@
     
         
 
+        
+    
+    </div>
+
     
 
     
-    <h4 class="name" id="Semester"><span class="type-signature"></span>new Semester<span class="signature">(registration_code, registration_id)</span><span class="type-signature"></span></h4>
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-Wrapper.WebPortal.html">WebPortal</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-Wrapper.WebPortalSession.html">WebPortalSession</a></dt>
+            <dd></dd>
+        </dl>
     
 
     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".API"><span class="type-signature">(static, constant) </span>API<span class="type-signature"> :string</span></h4>
+
 
 
 
 <div class="description">
-    Class which contains Semester info
+    Base API endpoint for the JIIT web portal
 </div>
 
 
 
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
+    <h5>Type:</h5>
+    <ul>
+        <li>
             
-                <td class="name"><code>registration_code</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">string</span>
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Registration code of the semester</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>registration_id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Registration ID of the semester</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
+        </li>
+    </ul>
 
 
 
@@ -166,7 +122,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="attendance.js.html">attendance.js</a>, <a href="attendance.js.html#line35">line 35</a>
+        <a href="wrapper.js.html">wrapper.js</a>, <a href="wrapper.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -182,22 +138,36 @@
 
 
 
+        
+            
+<h4 class="name" id=".DEFCAPTCHA"><span class="type-signature">(static, constant) </span>DEFCAPTCHA<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    Default CAPTCHA values used for login
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
 
 
 
 
 
-
-
-
-
-
-
-
-
+<dl class="details">
 
     
-    </div>
 
     
 
@@ -211,6 +181,108 @@
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="wrapper.js.html">wrapper.js</a>, <a href="wrapper.js.html#line20">line 20</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="~authenticatedMethods"><span class="type-signature">(inner, constant) </span>authenticatedMethods<span class="type-signature"> :Array.&lt;string></span></h4>
+
+
+
+
+<div class="description">
+    List of methods that require authentication
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Array.&lt;string></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="wrapper.js.html">wrapper.js</a>, <a href="wrapper.js.html#line691">line 691</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -222,7 +294,7 @@
     
 
     
-    <h4 class="name" id=".from_json"><span class="type-signature">(static) </span>from_json<span class="signature">(resp)</span><span class="type-signature"> &rarr; {Semester}</span></h4>
+    <h4 class="name" id="~authenticated"><span class="type-signature">(inner) </span>authenticated<span class="signature">(method)</span><span class="type-signature"> &rarr; {function}</span></h4>
     
 
     
@@ -230,7 +302,7 @@
 
 
 <div class="description">
-    Static method to create a Semester from a JSON object
+    Decorator that checks if user is authenticated before executing method
 </div>
 
 
@@ -266,13 +338,13 @@
 
         <tr>
             
-                <td class="name"><code>resp</code></td>
+                <td class="name"><code>method</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">function</span>
 
 
             
@@ -282,7 +354,7 @@
 
             
 
-            <td class="description last">JSON object representing Semester</td>
+            <td class="description last">Method to decorate</td>
         </tr>
 
     
@@ -323,7 +395,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="attendance.js.html">attendance.js</a>, <a href="attendance.js.html#line45">line 45</a>
+        <a href="wrapper.js.html">wrapper.js</a>, <a href="wrapper.js.html#line678">line 678</a>
     </li></ul></dd>
     
 
@@ -346,13 +418,42 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        If user is not logged in
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">NotLoggedIn</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
 <div class="param-desc">
-    A new Semester instance
+    Decorated method that checks authentication
 </div>
 
 
@@ -363,7 +464,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Semester</span>
+<span class="param-type">function</span>
 
 
     </dd>
@@ -397,7 +498,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Aug 05 2025 11:28:27 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Aug 05 2025 11:36:20 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
