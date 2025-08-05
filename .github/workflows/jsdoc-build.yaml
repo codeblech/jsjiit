@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Get package version
+        id: get_version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
       - name: Build docs
         uses: andstor/jsdoc-action@v1
         with:
@@ -20,5 +23,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/jsjiit
+          publish_dir: ./docs/jsjiit/${{ steps.get_version.outputs.version }}
 
