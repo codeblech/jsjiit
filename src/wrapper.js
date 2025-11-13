@@ -547,11 +547,12 @@ export class WebPortal {
    */
   async get_subject_choices(semester) {
     const ENDPOINT = "/studentchoiceprint/getsubjectpreference";
-    const payload = {
+    const payload_dict = {
       instituteid: this.session.instituteid,
-      studentid: this.session.memberid,
+      clientid: this.session.clientid,
       registrationid: semester.registration_id,
     };
+    const payload = await serialize_payload(payload_dict);
     const resp = await this.__hit("POST", API + ENDPOINT, { json: payload, authenticated: true });
     return resp["response"];
   }
