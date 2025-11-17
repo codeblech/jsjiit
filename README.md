@@ -21,7 +21,7 @@ god knew i'd be too powerful if I could solve captchas everyday so here we are
 first import the `WebPortal` class inside a `<script type="module">` tag:
 
 ```javascript
-import { WebPortal } from 'https://cdn.jsdelivr.net/npm/jsjiit@0.0.20/dist/jsjiit.min.esm.js';
+import { WebPortal } from 'https://cdn.jsdelivr.net/npm/jsjiit@0.0.23/dist/jsjiit.min.esm.js';
 ```
 
 > [!IMPORTANT]
