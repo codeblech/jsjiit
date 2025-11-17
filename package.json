@@ -1,6 +1,6 @@
 {
   "name": "jsjiit",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "Browser-compatible API for interacting with JIIT (Jaypee Institute of Information Technology) WebPortal. Bypasses CAPTCHA :)",
   "main": "src/index.js",
   "module": "dist/jsjiit.esm.js",
