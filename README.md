@@ -21,18 +21,39 @@ god knew i'd be too powerful if I could solve captchas everyday so here we are
 first import the `WebPortal` class inside a `<script type="module">` tag:
 
 ```javascript
-import { WebPortal } from 'https://cdn.jsdelivr.net/npm/jsjiit@0.0.23/dist/jsjiit.min.esm.js';
+import { WebPortal } from 'https://cdn.jsdelivr.net/npm/jsjiit@0.0.24/dist/jsjiit.min.esm.js';
 ```
 
 > [!IMPORTANT]
 > if this version causes issues, use the latest version from the cdn (even if i forget to update these docs). use the [npm link](https://www.npmjs.com/package/jsjiit) to find the latest version number.
 
+### 🚨 CORS Issues? (for browser usage)
+
+JIIT recently added CORS restrictions that block cross-origin requests. if you're using this in a browser and getting CORS errors, enable proxy mode:
+
+```javascript
+// create portal with proxy mode enabled (to bypass CORS)
+const portal = new WebPortal({
+  useProxy: true,
+  proxyUrl: 'https://your-cors-proxy.com // REQUIRED when useProxy is true
+});
+```
+
+> **why proxy mode?**
+> JIIT's backend now only allows same-origin requests. the proxy server receives your request, forwards it to JIIT (server-to-server, no CORS), and returns the response with proper CORS headers. your frontend → proxy → JIIT → proxy → your frontend.
+>
+> **note:** you need to deploy your own CORS proxy and pass the URL when creating the WebPortal instance. yeah, fuck jpoop.
+
+if you're running from the same domain as JIIT (you're not), or outside of a browser environment, you can skip proxy mode:
+
+```javascript
+// direct mode (default, no proxy)
+const portal = new WebPortal();
+```
+
 then let's speedrun this depression:
 
 ```javascript
-// create your portal buddy (they won't leave you like she did)
-const portal = new WebPortal();
-
 // login (fingers crossed bestie)
 await portal.student_login('your_username', 'your_password');
 ```
@@ -53,6 +74,7 @@ const sem = meta.latest_semester();
 const header = meta.latest_header();
 const attendance = await portal.get_attendance(header, sem);
 ```
+
 ```javascript
 // Get attendace for every class of a subject
 const subjectIndex = 1;
@@ -67,22 +89,26 @@ if (attendance["studentattendancelist"][subjectIndex][possibleComponentCode]) {
 }
 let subjectAttendance = await portal.get_subject_daily_attendance(sem, subjectid, individualsubjectcode, subjectcomponentids);
 ```
+
 ```javascript
 // Check SGPA & CGPA
 const sgpaCgpa = await portal.get_sgpa_cgpa();
 ```
+
 ```javascript
 // Download marks for a semester
 const marksSems = await portal.get_semesters_for_marks();
 const previousSem = marksSems[1];
 const marks = await portal.download_marks(previousSem);
 ```
+
 ```javascript
 // Get registered subjects & faculties for a semester
 const registerdSems = await portal.get_registered_semesters();
 const latestSem = registerdSems[0];
 const registeredSubjects = await portal.get_registered_subjects_and_faculties(latestSem);
 ```
+
 ```javascript
 // Get Exam Schedule & Venue
 const examSems = await portal.get_semesters_for_exam_events();
@@ -90,6 +116,7 @@ const latestSem = examSems[0];
 const examEvents = await portal.get_exam_events(latestSem);
 const examSchedule = await portal.get_exam_schedule(examEvents[0]);
 ```
+
 ```javascript
 // Get Personal info like name, address ...
 const personalInfo = await portal.get_personal_info();
@@ -104,10 +131,12 @@ if this wrapper helped you avoid a mental breakdown, consider starring the repo 
 not liable for any emotional damage caused by viewing your attendance. that's between you and god fr
 
 ## special thanks
+
 massive shoutout to [codelif](https://github.com/codelif/) for creating [pyjiit](https://pyjiit.codelif.in/introduction.html).\
 y'all should check out pyjiit, it's the original goat that made jsjiit possible.
 
 ## future
+
 - me: be funny
 - repo: be funnier
 - both: we're so back

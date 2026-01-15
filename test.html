@@ -21,7 +21,11 @@
     window.main = async function main() {
       let user = document.getElementById("user");
       let pass = document.getElementById("pass");
-      let w = new WebPortal();
+      // Enable proxy mode to bypass CORS restrictions
+      let w = new WebPortal({
+        useProxy: true,
+        proxyUrl: 'https://jportal-cors-proxy.onrender.com'
+      });
       try {
         await w.student_login(user.value, pass.value);
       } catch (e) {
@@ -32,12 +36,12 @@
           return;
         }
       }
-      await w.fill_feedback_form("EXCELLENT");
-      // const meta = await w.get_attendance_meta()
-      // let sem = meta.semesters[1];
-      // let header = meta.latest_header();
-      // console.log("Latest semester:", sem);
-      // console.log("Latest header:", header);
+      // await w.fill_feedback_form("EXCELLENT");
+      const meta = await w.get_attendance_meta()
+      let sem = meta.semesters[1];
+      let header = meta.latest_header();
+      console.log("Latest semester:", sem);
+      console.log("Latest header:", header);
       // let attendance = await w.get_attendance(header, sem);
       // console.log(attendance);
 
