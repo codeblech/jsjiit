@@ -195,7 +195,7 @@ export class WebPortal {
    */
   async student_login(username, password, captcha = DEFCAPTCHA) {
     let pretoken_endpoint = "/token/pretoken-check";
-    let token_endpoint = "/token/generate-token1";
+    let token_endpoint = "/token/generatetoken";
 
     let payload = { username: username, usertype: "S", captcha: captcha };
     payload = await serialize_payload(payload);
