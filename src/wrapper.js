@@ -1,4 +1,11 @@
-import { NotLoggedIn, SessionExpired, SessionError, AccountAPIError, LoginError, APIError } from "./exceptions.js";
+import {
+  NotLoggedIn,
+  SessionExpired,
+  SessionError,
+  AccountAPIError,
+  LoginError,
+  APIError,
+} from "./exceptions.js";
 import { RegisteredSubject, Registrations } from "./registration.js";
 import { AttendanceMeta, AttendanceHeader, Semester } from "./attendance.js";
 import { ExamEvent } from "./exam.js";
@@ -88,7 +95,7 @@ export class WebPortal {
 
     // Validate that proxyUrl is provided when useProxy is true
     if (this.useProxy && !this.proxyUrl) {
-      throw new Error('proxyUrl is required when useProxy is true');
+      throw new Error("proxyUrl is required when useProxy is true");
     }
   }
 
@@ -148,7 +155,7 @@ export class WebPortal {
     if (this.useProxy) {
       // Proxy mode: Send request to proxy with original URL as path
       // Remove the API base from the URL if it exists to avoid duplication
-      let endpoint = url.replace(this.apiUrl, '');
+      let endpoint = url.replace(this.apiUrl, "");
       finalUrl = `${this.proxyUrl}/proxy${endpoint}`;
     } else {
       // Direct mode: Use the URL as-is
@@ -160,7 +167,9 @@ export class WebPortal {
       const response = await fetch(finalUrl, fetchOptions);
 
       if (response.status === 513) {
-        throw new exception("JIIT Web Portal server is temporarily unavailable (HTTP 513). Please try again later.");
+        throw new exception(
+          "JIIT Web Portal server is temporarily unavailable (HTTP 513). Please try again later.",
+        );
       }
       if (response.status === 401) {
         throw new SessionExpired(response.error);
@@ -177,8 +186,8 @@ export class WebPortal {
       if (error instanceof TypeError && error.message.includes("CORS")) {
         throw new exception(
           "CORS error: Cannot access JIIT Web Portal API. " +
-          "If you're running this from a browser, try enabling proxy mode: " +
-          "new WebPortal({ useProxy: true })"
+            "If you're running this from a browser, try enabling proxy mode: " +
+            "new WebPortal({ useProxy: true })",
         );
       }
       throw new exception(error.message || "Unknown error");
@@ -200,7 +209,10 @@ export class WebPortal {
     let payload = { username: username, usertype: "S", captcha: captcha };
     payload = await serialize_payload(payload);
 
-    let resp = await this.__hit("POST", this.apiUrl + pretoken_endpoint, { body: payload, exception: LoginError });
+    let resp = await this.__hit("POST", this.apiUrl + pretoken_endpoint, {
+      body: payload,
+      exception: LoginError,
+    });
 
     let payload2 = resp["response"];
     delete payload2["rejectedData"];
@@ -208,7 +220,10 @@ export class WebPortal {
     payload2["passwordotpvalue"] = password;
     payload2 = await serialize_payload(payload2);
 
-    const resp2 = await this.__hit("POST", this.apiUrl + token_endpoint, { body: payload2, exception: LoginError });
+    const resp2 = await this.__hit("POST", this.apiUrl + token_endpoint, {
+      body: payload2,
+      exception: LoginError,
+    });
     this.session = new WebPortalSession(resp2["response"]);
     return this.session;
   }
@@ -223,7 +238,10 @@ export class WebPortal {
       clinetid: "SOAU",
       instituteid: this.session.instituteid,
     };
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -237,7 +255,10 @@ export class WebPortal {
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
     };
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -269,7 +290,8 @@ export class WebPortal {
    * @returns {Promise<AttendanceMeta>} Attendance metadata
    */
   async get_attendance_meta() {
-    const ENDPOINT = "/StudentClassAttendance/getstudentInforegistrationforattendence";
+    const ENDPOINT =
+      "/StudentClassAttendance/getstudentInforegistrationforattendence";
 
     const payload = {
       clientid: this.session.clientid,
@@ -277,7 +299,10 @@ export class WebPortal {
       membertype: this.session.membertype,
     };
 
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return new AttendanceMeta(resp["response"]);
   }
 
@@ -300,7 +325,10 @@ export class WebPortal {
 
     // console.log(payload)
 
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -312,7 +340,12 @@ export class WebPortal {
    * @param {Array<string>} subjectcomponentids - Array of subject component IDs
    * @returns {Promise<Object>} Subject attendance details
    */
-  async get_subject_daily_attendance(semester, subjectid, individualsubjectcode, subjectcomponentids) {
+  async get_subject_daily_attendance(
+    semester,
+    subjectid,
+    individualsubjectcode,
+    subjectcomponentids,
+  ) {
     const ENDPOINT = "/StudentClassAttendance/getstudentsubjectpersentage";
     const payload = await serialize_payload({
       cmpidkey: subjectcomponentids.map((id) => ({ subjectcomponentid: id })),
@@ -323,7 +356,10 @@ export class WebPortal {
       subjectcode: individualsubjectcode,
       subjectid: subjectid,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -338,7 +374,10 @@ export class WebPortal {
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"]["registrations"].map((i) => Semester.from_json(i));
   }
 
@@ -354,7 +393,10 @@ export class WebPortal {
       studentid: this.session.memberid,
       registrationid: semester.registration_id,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return new Registrations(resp["response"]);
   }
 
@@ -363,15 +405,21 @@ export class WebPortal {
    * @returns {Promise<Array<Semester>>} Array of semester objects
    */
   async get_semesters_for_exam_events() {
-    const ENDPOINT = "/studentcommonsontroller/getsemestercode-withstudentexamevents";
+    const ENDPOINT =
+      "/studentcommonsontroller/getsemestercode-withstudentexamevents";
     const payload = await serialize_payload({
       clientid: this.session.clientid,
       instituteid: this.session.instituteid,
       memberid: this.session.memberid,
     });
 
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
-    return resp["response"]["semesterCodeinfo"]["semestercode"].map((i) => Semester.from_json(i));
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"]["semesterCodeinfo"]["semestercode"].map((i) =>
+      Semester.from_json(i),
+    );
   }
 
   /**
@@ -386,8 +434,13 @@ export class WebPortal {
       registationid: semester.registration_id, // not a typo
     });
 
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
-    return resp["response"]["eventcode"]["examevent"].map((i) => ExamEvent.from_json(i));
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"]["eventcode"]["examevent"].map((i) =>
+      ExamEvent.from_json(i),
+    );
   }
 
   /**
@@ -402,7 +455,10 @@ export class WebPortal {
       registrationid: exam_event.registration_id,
       exameventid: exam_event.exam_event_id,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -416,7 +472,10 @@ export class WebPortal {
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"]["semestercode"].map((i) => Semester.from_json(i));
   }
 
@@ -446,7 +505,7 @@ export class WebPortal {
       let downloadUrl = this.apiUrl + ENDPOINT;
       if (this.useProxy) {
         // Remove the API base from the URL if it exists to avoid duplication
-        let endpoint = downloadUrl.replace(this.apiUrl, '');
+        let endpoint = downloadUrl.replace(this.apiUrl, "");
         downloadUrl = `${this.proxyUrl}/proxy${endpoint}`;
       }
       const resp = await fetch(downloadUrl, fetchOptions);
@@ -465,16 +524,128 @@ export class WebPortal {
   }
 
   /**
-   * Gets semesters that have grade cards available
+   * Downloads grade report PDF for a semester
+   * @param {Semester} semester - Semester object
+   * @throws {APIError} On download failure
+   */
+  async download_grades(semester) {
+    // Similar pattern to download_marks but uses the grades endpoint
+    const ENDPOINT =
+      "/studentsgpacgpa/semesterwisestudentresultreport/" +
+      this.session.instituteid +
+      "/" +
+      semester.registration_id +
+      "/" +
+      semester.registration_code;
+
+    const localname = await generate_local_name();
+    let _headers = await this.session.get_headers(localname);
+    const fetchOptions = {
+      method: "GET",
+      headers: _headers,
+    };
+
+    try {
+      let downloadUrl = this.apiUrl + ENDPOINT;
+      if (this.useProxy) {
+        let endpoint = downloadUrl.replace(this.apiUrl, "");
+        downloadUrl = `${this.proxyUrl}/proxy${endpoint}`;
+      }
+      const resp = await fetch(downloadUrl, fetchOptions);
+      const blob = await resp.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `grades_${semester.registration_code}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    } catch (error) {
+      throw new APIError(error);
+    }
+  }
+  /**
+   * Gets semesters that can fetch grade cards.
+   * Semesters exposed only by subject-choice registration may return incomplete grade cards.
    * @returns {Promise<Array<Semester>>} Array of semester objects
    */
   async get_semesters_for_grade_card() {
-    const ENDPOINT = "/studentgradecard/getregistrationList";
+    const GRADE_CARD_ENDPOINT = "/studentgradecard/getregistrationList";
+    const CHOICE_PRINT_ENDPOINT = "/studentchoiceprint/getsemestercodelist";
+    const [gradeCardPayload, choicePrintPayload] = await Promise.all([
+      serialize_payload({
+        instituteid: this.session.instituteid,
+      }),
+      serialize_payload({}),
+    ]);
+    const [gradeCardResp, choicePrintResp] = await Promise.all([
+      this.__hit("POST", this.apiUrl + GRADE_CARD_ENDPOINT, {
+        json: gradeCardPayload,
+        authenticated: true,
+      }),
+      this.__hit("POST", this.apiUrl + CHOICE_PRINT_ENDPOINT, {
+        json: choicePrintPayload,
+        authenticated: true,
+      }),
+    ]);
+
+    const completeSemesters = (
+      gradeCardResp["response"]?.["registrations"] || []
+    ).map((i) =>
+      Semester.from_json(i, {
+        is_grade_card_complete: true,
+        grade_card_source: "studentgradecard",
+      }),
+    );
+    const completeRegistrationIds = new Set(
+      completeSemesters.map((i) => i.registration_id),
+    );
+    const completeRegistrationCodes = new Set(
+      completeSemesters.map((i) => i.registration_code),
+    );
+    const choicePrintSemesters = (
+      choicePrintResp["response"]?.["registrationcodelist"] || []
+    ).map((i) => {
+      const isComplete =
+        completeRegistrationIds.has(i.registrationid) ||
+        completeRegistrationCodes.has(i.registrationcode);
+      return Semester.from_json(i, {
+        is_grade_card_complete: isComplete,
+        grade_card_source: isComplete
+          ? "studentgradecard"
+          : "studentchoiceprint",
+      });
+    });
+
+    const semestersByRegistrationId = new Map();
+    for (const semester of choicePrintSemesters) {
+      semestersByRegistrationId.set(semester.registration_id, semester);
+    }
+    for (const semester of completeSemesters) {
+      if (!semestersByRegistrationId.has(semester.registration_id)) {
+        semestersByRegistrationId.set(semester.registration_id, semester);
+      }
+    }
+
+    return Array.from(semestersByRegistrationId.values());
+  }
+
+  /**
+   * Gets student metadata needed for grade-card requests
+   * @private
+   * @returns {Promise<Object>} Grade-card student info
+   */
+  async __get_grade_card_student_info() {
+    const ENDPOINT = "/studentgradecard/getstudentinfo";
     const payload = await serialize_payload({
       instituteid: this.session.instituteid,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
-    return resp["response"]["registrations"].map((i) => Semester.from_json(i));
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"]["studentinfo"] || resp["response"];
   }
 
   /**
@@ -483,12 +654,8 @@ export class WebPortal {
    * @returns {Promise<string>} Program ID
    */
   async __get_program_id() {
-    const ENDPOINT = "/studentgradecard/getstudentinfo";
-    const payload = await serialize_payload({
-      instituteid: this.session.instituteid,
-    });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
-    return resp["response"]["programid"];
+    const studentInfo = await this.__get_grade_card_student_info();
+    return studentInfo["programid"];
   }
 
   /**
@@ -497,15 +664,18 @@ export class WebPortal {
    * @returns {Promise<Object>} Grade card details
    */
   async get_grade_card(semester) {
-    const programid = await this.__get_program_id();
+    const studentInfo = await this.__get_grade_card_student_info();
     const ENDPOINT = "/studentgradecard/showstudentgradecard";
     const payload = await serialize_payload({
-      branchid: this.session.branch_id,
+      branchid: studentInfo["branchid"],
       instituteid: this.session.instituteid,
-      programid: programid,
+      programid: studentInfo["programid"],
       registrationid: semester.registration_id,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -522,7 +692,10 @@ export class WebPortal {
       name: this.session.name,
       enrollmentno: this.session.enrollmentno,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"]["studentlov"]["currentsemester"];
   }
 
@@ -538,7 +711,10 @@ export class WebPortal {
       studentid: this.session.memberid,
       stynumber: stynumber,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -555,7 +731,10 @@ export class WebPortal {
       instituteid: this.session.instituteid,
       studentid: this.session.memberid,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -569,7 +748,10 @@ export class WebPortal {
     const payload = {
       instituteid: this.session.instituteid,
     };
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -587,7 +769,10 @@ export class WebPortal {
       clientid: this.session.clientid,
       registrationid: semester.registration_id,
     });
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     return resp["response"];
   }
 
@@ -599,7 +784,10 @@ export class WebPortal {
       studentid: this.session.memberid,
     };
 
-    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
 
     if (!resp?.response) {
       throw new Error("Hostel details not found");
@@ -613,7 +801,10 @@ export class WebPortal {
     const payload = {
       instituteid: this.session.instituteid,
     };
-    const resp = await this.__hit("POST", this.apiUrl + SEMESTER_ENDPOINT, { json: payload, authenticated: true });
+    const resp = await this.__hit("POST", this.apiUrl + SEMESTER_ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
     let semesters = resp["response"]["eventList"];
     let latest_semester = semesters[semesters.length - 1];
     let latest_semester_code = latest_semester["eventcode"];
@@ -626,7 +817,10 @@ export class WebPortal {
       studentid: this.session.memberid,
       eventid: latest_semester_event_id,
     });
-    const grid_resp = await this.__hit("POST", this.apiUrl + GRID_ENDPOINT, { json: grid_payload, authenticated: true });
+    const grid_resp = await this.__hit("POST", this.apiUrl + GRID_ENDPOINT, {
+      json: grid_payload,
+      authenticated: true,
+    });
     let grid_data = grid_resp["response"]["gridData"];
 
     // instituteid
@@ -653,21 +847,29 @@ export class WebPortal {
 
     for (let question_feedback_payload of question_feedback_payload_array) {
       try {
-        const questions_api_resp = await this.__hit("POST", this.apiUrl + GET_QUESTIONS_ENDPOINT, {
-          json: question_feedback_payload,
-          authenticated: true,
-        });
+        const questions_api_resp = await this.__hit(
+          "POST",
+          this.apiUrl + GET_QUESTIONS_ENDPOINT,
+          {
+            json: question_feedback_payload,
+            authenticated: true,
+          },
+        );
       } catch (error) {
         continue;
       }
 
       // Process the response to get the list of questions
-      if (!questions_api_resp || !questions_api_resp.response || !questions_api_resp.response.questionList) {
+      if (
+        !questions_api_resp ||
+        !questions_api_resp.response ||
+        !questions_api_resp.response.questionList
+      ) {
         console.error(
           "Failed to retrieve question list or invalid response structure for payload:",
           question_feedback_payload,
           "Response:",
-          questions_api_resp
+          questions_api_resp,
         );
         // Skip to the next feedback item if data is missing
         continue;
@@ -738,6 +940,7 @@ const authenticatedMethods = [
   "get_semesters_for_marks",
   "download_marks",
   "get_semesters_for_grade_card",
+  "__get_grade_card_student_info",
   "__get_program_id",
   "get_grade_card",
   "__get_semester_number",
@@ -749,5 +952,7 @@ const authenticatedMethods = [
 ];
 
 authenticatedMethods.forEach((methodName) => {
-  WebPortal.prototype[methodName] = authenticated(WebPortal.prototype[methodName]);
+  WebPortal.prototype[methodName] = authenticated(
+    WebPortal.prototype[methodName],
+  );
 });

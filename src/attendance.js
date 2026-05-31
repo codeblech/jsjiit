@@ -31,19 +31,30 @@ export class Semester {
    * Class which contains Semester info
    * @param {string} registration_code - Registration code of the semester
    * @param {string} registration_id - Registration ID of the semester
+   * @param {object} [options={}] - Additional semester metadata
+   * @param {boolean} [options.is_grade_card_complete] - Whether the grade card is complete for this semester
+   * @param {string} [options.grade_card_source] - Source used to expose the semester for grade cards
    */
-  constructor(registration_code, registration_id) {
+  constructor(registration_code, registration_id, options = {}) {
     this.registration_code = registration_code;
     this.registration_id = registration_id;
+
+    if (Object.prototype.hasOwnProperty.call(options, "is_grade_card_complete")) {
+      this.is_grade_card_complete = options.is_grade_card_complete;
+    }
+    if (options.grade_card_source) {
+      this.grade_card_source = options.grade_card_source;
+    }
   }
 
   /**
    * Static method to create a Semester from a JSON object
    * @param {object} resp - JSON object representing Semester
+   * @param {object} [options={}] - Additional semester metadata
    * @returns {Semester} A new Semester instance
    */
-  static from_json(resp) {
-    return new Semester(resp.registrationcode, resp.registrationid);
+  static from_json(resp, options = {}) {
+    return new Semester(resp.registrationcode, resp.registrationid, options);
   }
 }
 
