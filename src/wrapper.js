@@ -776,6 +776,31 @@ export class WebPortal {
     return resp["response"];
   }
 
+  async get_mooc_subject_status_semesters() {
+    const ENDPOINT = "/moocsubjectstatus/getsemestercodelist";
+    const payload = {
+      instituteid: this.session.instituteid,
+    };
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"];
+  }
+
+  async get_mooc_subject_status(semester) {
+    const ENDPOINT = "/moocsubjectstatus/getsubjectstatus";
+    const payload = {
+      instituteid: this.session.instituteid,
+      registrationid: semester.registration_id,
+    };
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"];
+  }
+
   async get_hostel_details() {
     const ENDPOINT = "/myhostelallocationdetail/gethostelallocationdetail";
     const payload = {
@@ -946,6 +971,8 @@ const authenticatedMethods = [
   "__get_semester_number",
   "get_sgpa_cgpa",
   "get_hostel_details",
+  "get_mooc_subject_status_semesters",
+  "get_mooc_subject_status",
   "get_fines_msc_charges",
   "get_fee_summary",
   "get_subject_choices",

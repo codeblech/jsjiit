@@ -89,6 +89,12 @@
       // let marks = await w.download_marks(latestSem);
       // console.log(marks);
 
+      const moocSems = await w.get_mooc_subject_status_semesters();
+      console.log("MOOC semesters:", moocSems);
+      const sem = moocSems[0];
+      const moocStatus = await w.get_mooc_subject_status({ registration_id: sem.registrationid });
+      console.log("MOOC status:", moocStatus);
+
     }
   </script>
 </body>
