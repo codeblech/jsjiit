@@ -9,7 +9,7 @@ import {
 import { RegisteredSubject, Registrations } from "./registration.js";
 import { AttendanceMeta, AttendanceHeader, Semester } from "./attendance.js";
 import { ExamEvent } from "./exam.js";
-import { generate_local_name, serialize_payload } from "./encryption.js";
+import { base64Encode, encrypt, generate_local_name, serialize_payload } from "./encryption.js";
 
 /**
  * @module Wrapper
@@ -801,6 +801,35 @@ export class WebPortal {
     return resp["response"];
   }
 
+  async get_add_drop_status_semesters() {
+    const ENDPOINT = "/adddropsubjectstatus/getsemestercodelist";
+    const bypassValue = base64Encode(
+      await encrypt(new TextEncoder().encode(this.session.regdata.bypass)),
+    );
+    const payload = {
+      instituteid: this.session.instituteid,
+      bypassValue,
+    };
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"];
+  }
+
+  async get_add_drop_status(semester) {
+    const ENDPOINT = "/adddropsubjectstatus/getsubjectstatus";
+    const payload = {
+      instituteid: this.session.instituteid,
+      registrationid: semester.registration_id,
+    };
+    const resp = await this.__hit("POST", this.apiUrl + ENDPOINT, {
+      json: payload,
+      authenticated: true,
+    });
+    return resp["response"];
+  }
+
   async get_hostel_details() {
     const ENDPOINT = "/myhostelallocationdetail/gethostelallocationdetail";
     const payload = {
@@ -973,6 +1002,8 @@ const authenticatedMethods = [
   "get_hostel_details",
   "get_mooc_subject_status_semesters",
   "get_mooc_subject_status",
+  "get_add_drop_status_semesters",
+  "get_add_drop_status",
   "get_fines_msc_charges",
   "get_fee_summary",
   "get_subject_choices",
