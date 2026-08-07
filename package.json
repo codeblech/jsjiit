@@ -55,7 +55,7 @@
   },
   "homepage": "https://github.com/codeblech/jsjiit#readme",
   "devDependencies": {
-    "esbuild": "0.24.0",
+    "esbuild": "^0.28.1",
     "jsdoc": "^4.0.4"
   }
 }
